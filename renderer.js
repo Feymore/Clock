@@ -1,5 +1,4 @@
-// Wait until the DOM content is fully loaded
-window.addEventListener('DOMContentLoaded', () => {
+function initializeClock() {
     try {
         // Get the clock element by its ID
         const clockElement = document.getElementById('clock');
@@ -22,6 +21,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 clockElement.textContent = timeString;
             } catch (error) {
                 console.error("Error updating clock:", error);
+                retryInitialization();
             }
         }
 
@@ -34,10 +34,23 @@ window.addEventListener('DOMContentLoaded', () => {
                 updateClock();
             } catch (error) {
                 console.error("Error in setInterval execution:", error);
+                retryInitialization();
             }
         }, 1000);
-        
+
     } catch (error) {
         console.error("Error initializing clock:", error);
+        retryInitialization();
     }
+}
+
+// Retry the initialization after a short delay (or immediately)
+function retryInitialization() {
+    console.warn("Retrying clock initialization...");
+    setTimeout(initializeClock, 100);  // Retry immediately after 100ms
+}
+
+// Wait until the DOM content is fully loaded
+window.addEventListener('DOMContentLoaded', () => {
+    initializeClock();
 });
